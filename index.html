@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParentLock — Lock your phone. Unlock their childhood.</title>
+    <meta name="description" content="ParentLock helps parents put their phone away and be present with their 0-5 year olds. Age-specific developmental prompts. Hard lock. No cheating.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sage: #87A878;
+            --sage-light: #A8C49A;
+            --sage-dark: #6B8A5E;
+            --coral: #E8998D;
+            --coral-dark: #D4796C;
+            --cream: #FFF8F0;
+            --cream-dark: #F5EDE0;
+            --charcoal: #2D2D2D;
+            --warm-grey: #6B6B6B;
+            --soft-pink: #F5DDD6;
+            --soft-green: #E8F0E4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--charcoal);
+            background: var(--cream);
+            overflow-x: hidden;
+        }
+
+        /* ========== NOISE TEXTURE ========== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* ========== NAVIGATION ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 248, 240, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 2px 30px rgba(0,0,0,0.05);
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--sage-dark);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span {
+            color: var(--coral);
+        }
+
+        .nav-cta {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--sage-dark);
+            transform: translateY(-2px);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--soft-green) 0%, transparent 70%);
+            opacity: 0.6;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -15%;
+            width: 50vw;
+            height: 50vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--soft-pink) 0%, transparent 70%);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--soft-green);
+            color: var(--sage-dark);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            color: var(--charcoal);
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--sage);
+            position: relative;
+        }
+
+        .hero h1 em::after {
+            content: '';
+            position: absolute;
+            bottom: 0.05em;
+            left: 0;
+            right: 0;
+            height: 0.15em;
+            background: var(--coral);
+            opacity: 0.4;
+            border-radius: 4px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Lora', serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--warm-grey);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--sage-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(107, 138, 94, 0.3);
+        }
+
+        .btn-secondary {
+            color: var(--warm-grey);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 1rem 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            color: var(--charcoal);
+        }
+
+        /* ========== STAT BANNER ========== */
+        .stat-banner {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .stat-banner-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-number {
+            font-size: clamp(4rem, 10vw, 7rem);
+            font-weight: 800;
+            color: var(--coral);
+            line-height: 1;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-text {
+            font-family: 'Lora', serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+
+        .stat-source {
+            font-size: 0.8rem;
+            opacity: 0.4;
+            margin-top: 1rem;
+        }
+
+        /* ========== SECTIONS ========== */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--sage);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-subtitle {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            color: var(--warm-grey);
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        /* ========== HOW IT WORKS ========== */
+        .how-it-works {
+            background: var(--cream);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            position: relative;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .step:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--soft-green);
+            color: var(--sage-dark);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .step p {
+            color: var(--warm-grey);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* ========== THE DIFFERENCE ========== */
+        .difference {
+            background: white;
+        }
+
+        .difference-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .difference-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .diff-card {
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .diff-card.them {
+            background: #f5f5f5;
+        }
+
+        .diff-card.us {
+            background: var(--soft-green);
+        }
+
+        .diff-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diff-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .diff-card li {
+            padding: 0.6rem 0;
+            color: var(--warm-grey);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .diff-card li::before {
+            content: '—';
+            color: var(--warm-grey);
+            font-weight: 300;
+            flex-shrink: 0;
+        }
+
+        .diff-card.us li::before {
+            content: '✓';
+            color: var(--sage-dark);
+            font-weight: 600;
+        }
+
+        /* ========== PROMPT PREVIEW ========== */
+        .prompt-preview {
+            background: var(--cream);
+        }
+
+        .prompt-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .prompt-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border-left: 4px solid var(--sage);
+            transition: all 0.3s ease;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        }
+
+        .prompt-age {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--coral);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .prompt-text {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--charcoal);
+            font-style: italic;
+        }
+
+        .prompt-category {
+            display: inline-block;
+            background: var(--soft-green);
+            color: var(--sage-dark);
+            padding: 0.3rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ========== SCIENCE SECTION ========== */
+        .science {
+            background: var(--sage-dark);
+            color: var(--cream);
+        }
+
+        .science .section-label {
+            color: var(--sage-light);
+        }
+
+        .science .section-subtitle {
+            color: rgba(255, 248, 240, 0.7);
+        }
+
+        .science-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .science-stat {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .science-stat .number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--coral);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .science-stat .label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        /* ========== PRICING ========== */
+        .pricing {
+            background: white;
+            text-align: center;
+        }
+
+        .price-card {
+            max-width: 420px;
+            margin: 3rem auto 0;
+            background: var(--cream);
+            border-radius: 24px;
+            padding: 3rem;
+            border: 2px solid var(--sage-light);
+            position: relative;
+        }
+
+        .price-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--charcoal);
+            letter-spacing: -0.03em;
+        }
+
+        .price-period {
+            font-size: 1.2rem;
+            color: var(--warm-grey);
+            font-weight: 400;
+        }
+
+        .price-tagline {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--warm-grey);
+            margin: 1rem 0 2rem;
+            font-style: italic;
+        }
+
+        .price-features {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .price-features li {
+            padding: 0.6rem 0;
+            font-size: 0.95rem;
+            color: var(--charcoal);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .price-features li::before {
+            content: '✓';
+            color: var(--sage);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .price-card .btn-primary {
+            width: 100%;
+            justify-content: center;
+            padding: 1.1rem;
+            font-size: 1.1rem;
+        }
+
+        /* ========== QUOTE SECTION ========== */
+        .quote-section {
+            background: var(--cream);
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .big-quote {
+            font-family: 'Lora', serif;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            line-height: 1.5;
+            color: var(--charcoal);
+            max-width: 750px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        .big-quote em {
+            color: var(--sage);
+            font-style: normal;
+        }
+
+        /* ========== FAQ ========== */
+        .faq {
+            background: white;
+        }
+
+        .faq-list {
+            max-width: 700px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            padding: 1.5rem 0;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            user-select: none;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--sage);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .faq-item.open .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding-top: 1rem;
+        }
+
+        .faq-answer p {
+            color: var(--warm-grey);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* ========== FINAL CTA ========== */
+        .final-cta {
+            background: var(--charcoal);
+            color: var(--cream);
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(2rem, 4.5vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .final-cta p {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            opacity: 0.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .final-cta .btn-primary {
+            background: var(--coral);
+            color: white;
+        }
+
+        .final-cta .btn-primary:hover {
+            background: var(--coral-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(232, 153, 141, 0.4);
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: var(--charcoal);
+            color: rgba(255,248,240,0.4);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        footer a {
+            color: rgba(255,248,240,0.6);
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--cream);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 7rem 1.5rem 3rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .prompt-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .science-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-logo">Parent<span>Lock</span></a>
+        <a href="#download" class="nav-cta">Download App</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <div class="hero-badge">For parents of 0–5 year olds</div>
+            <h1>Lock your phone.<br>Unlock their <em>childhood</em>.</h1>
+            <p class="hero-subtitle">
+                Your phone is designed to be addictive. Your toddler can't compete with the algorithm. 
+                ParentLock helps you choose them first — with age-specific prompts, then your phone goes away.
+            </p>
+            <div class="hero-cta-group">
+                <a href="#download" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    Download for iOS
+                </a>
+                <a href="#how" class="btn-secondary">See how it works ↓</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- STAT BANNER -->
+    <div class="stat-banner">
+        <div class="stat-banner-inner fade-in">
+            <div class="stat-number">75%</div>
+            <p class="stat-text">
+                By age 11, you've already spent 75% of all the time you'll ever spend 
+                with your child. The first five years are everything.
+            </p>
+            <p class="stat-source">Source: Our World in Data</p>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how">
+        <div class="section-inner">
+            <div class="fade-in">
+                <p class="section-label">How it works</p>
+                <h2 class="section-title">Four steps. Then your phone goes away.</h2>
+                <p class="section-subtitle">ParentLock isn't designed to keep you on your phone. It's designed to get you off it.</p>
+            </div>
+            <div class="steps">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Choose your distractions</h3>
+                    <p>Select the apps that pull you away — Instagram, TikTok, YouTube, whatever your weakness is. No judgement.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Set your presence time</h3>
+                    <p>15 minutes at bedtime. An hour at the park. A whole afternoon. You choose how long to lock.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Read your prompt</h3>
+                    <p>A quick, age-specific developmental tip about YOUR child. What they're learning right now. What to try. Takes 10 seconds.</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">4</div>
+                    <h3>Phone goes away</h3>
+                    <p>That's it. Phone in the drawer, pocket, bag. Apps are locked until your session ends. No cheating. Emergency calls always work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROMPT PREVIEW -->
+    <section class="prompt-preview">
+        <div class="section-inner">
+            <div class="fade-in">
+                <p class="section-label">Age-specific prompts</p>
+                <h2 class="section-title">Every prompt is written for YOUR child's age.</h2>
+                <p class="section-subtitle">Because a 6-month-old and a 4-year-old need completely different things from you.</p>
+            </div>
+            <div class="prompt-cards">
+                <div class="prompt-card fade-in">
+                    <p class="prompt-age">6–12 months</p>
+                    <p class="prompt-text">"Hide a toy under a blanket and let them find it. They're just discovering that things still exist when they can't see them. Mind. Blown."</p>
+                    <span class="prompt-category">Play</span>
+                </div>
+                <div class="prompt-card fade-in">
+                    <p class="prompt-age">2–3 years</p>
+                    <p class="prompt-text">"Ask them: 'What made you happy today?' They're learning emotional vocabulary. Their answer might surprise you."</p>
+                    <span class="prompt-category">Connect</span>
+                </div>
+                <div class="prompt-card fade-in">
+                    <p class="prompt-age">3–4 years</p>
+                    <p class="prompt-text">"They're in the 'why?' phase. Instead of answering their next 'why', ask them: 'What do YOU think?' Watch their brain light up."</p>
+                    <span class="prompt-category">Talk</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE DIFFERENCE -->
+    <section class="difference">
+        <div class="section-inner">
+            <div class="fade-in">
+                <p class="section-label">What makes us different</p>
+                <h2 class="section-title">We're not a screen time tracker.<br>We're a phone-away app.</h2>
+            </div>
+            <div class="difference-grid fade-in">
+                <div class="diff-card them">
+                    <h3>📱 Other apps</h3>
+                    <ul>
+                        <li>Track how much you use your phone</li>
+                        <li>Show you scary screen time reports</li>
+                        <li>Let you override the block whenever you want</li>
+                        <li>Generic advice for everyone</li>
+                        <li>Keep you on your phone longer</li>
+                    </ul>
+                </div>
+                <div class="diff-card us">
+                    <h3>🔒 ParentLock</h3>
+                    <ul>
+                        <li>Hard lock — once you start, no cheating</li>
+                        <li>Age-specific prompts for YOUR child</li>
+                        <li>Designed to get your phone OUT of your hands</li>
+                        <li>Personalised to your child's developmental stage</li>
+                        <li>Tracks presence, not screen time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCIENCE -->
+    <section class="science">
+        <div class="section-inner">
+            <div class="fade-in">
+                <p class="section-label">The research</p>
+                <h2 class="section-title">This isn't guilt. It's science.</h2>
+                <p class="section-subtitle">A 2025 meta-analysis across 10 countries found that parental phone use directly impacts child development.</p>
+            </div>
+            <div class="science-stats fade-in">
+                <div class="science-stat">
+                    <div class="number">96×</div>
+                    <div class="label">Average times a parent checks their phone per day</div>
+                </div>
+                <div class="science-stat">
+                    <div class="number">60%</div>
+                    <div class="label">of parents feel guilty about their screen time around kids</div>
+                </div>
+                <div class="science-stat">
+                    <div class="number">6×</div>
+                    <div class="label">greater risk of language delay with excessive screen exposure before age 2</div>
+                </div>
+                <div class="science-stat">
+                    <div class="number">55%</div>
+                    <div class="label">of parents say screens interfere with quality family time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="quote-section">
+        <div class="fade-in">
+            <p class="big-quote">
+                "Let's be honest — we spend so much energy locking our kids out of screens. 
+                But maybe <em>we're</em> the ones who need locking."
+            </p>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing" id="pricing">
+        <div class="section-inner">
+            <div class="fade-in">
+                <p class="section-label">Simple pricing</p>
+                <h2 class="section-title">Less than a coffee a week.</h2>
+            </div>
+            <div class="price-card fade-in">
+                <div class="price-amount">$4.99 <span class="price-period">/week</span></div>
+                <p class="price-tagline">"For their most important years."</p>
+                <ul class="price-features">
+                    <li>Unlimited presence sessions</li>
+                    <li>Age-specific developmental prompts</li>
+                    <li>Multiple child profiles</li>
+                    <li>Presence time tracking & weekly summaries</li>
+                    <li>Customisable reminder notifications</li>
+                    <li>Home screen widget</li>
+                    <li>Hard lock — no cheating</li>
+                </ul>
+                <a href="#download" class="btn-primary">Start Free Trial</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="section-inner">
+            <div class="fade-in">
+                <p class="section-label">Questions</p>
+                <h2 class="section-title">You're probably wondering…</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item fade-in">
+                    <div class="faq-question">Can I really not unlock my phone during a session?</div>
+                    <div class="faq-answer">
+                        <p>That's the whole point. Once you start a session, your selected apps are locked until the timer ends. Emergency calls always work. You chose the duration — we just hold you to it. Think of it as a commitment device, not a punishment.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question">What age range is this for?</div>
+                    <div class="faq-answer">
+                        <p>ParentLock is designed for parents of children aged 0–5. Our prompts are tailored to six developmental stages: 0–6 months, 6–12 months, 1–2 years, 2–3 years, 3–4 years, and 4–5 years. Each prompt is written specifically for what your child is learning right now.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question">What if I have multiple children?</div>
+                    <div class="faq-answer">
+                        <p>Add as many children as you like. Each gets their own profile with age-appropriate prompts. You can start a session for one child or all of them at once.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question">Is this app anti-technology?</div>
+                    <div class="faq-answer">
+                        <p>Not even slightly. We're pro-presence. Phones are incredible tools — they're just not great at sharing your attention with a toddler. ParentLock helps you choose when to be on and when to be present.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question">What about my privacy?</div>
+                    <div class="faq-answer">
+                        <p>All your data stays on your device. We don't collect, store, or sell any personal information. ParentLock is built to support families, not monetise them.</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question">Why isn't there a monthly or annual plan?</div>
+                    <div class="faq-answer">
+                        <p>Simple: $4.99/week is easy to try and easy to cancel. No big commitment. If it works for your family, it's worth it. If it doesn't, cancel anytime. No lock-in. (Ironic, we know.)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta" id="download">
+        <div class="fade-in">
+            <h2>They're only little once.</h2>
+            <p>Every minute of presence matters. Start today.</p>
+            <a href="#" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                Download ParentLock
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            © 2026 ParentLock. All rights reserved.
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Use</a>
+            <a href="mailto:hello@parentlock.app">Contact</a>
+        </p>
+    </footer>
+
+    <script>
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for fade-in
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                const item = q.parentElement;
+                const wasOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!wasOpen) item.classList.add('open');
+            });
+        });
+    </script>
+</body>
+</html>
